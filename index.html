@@ -47,7 +47,6 @@
             font-weight: 800;
         }
 
-        /* Sayaç Kutuları */
         .stats-container {
             display: flex;
             flex-direction: column;
@@ -63,6 +62,24 @@
             border-radius: 50px;
             border: 1px solid rgba(255,255,255,0.1);
             display: block;
+        }
+
+        /* Canlı kişi göstergesi için yeşil nokta */
+        .online-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #23d5ab;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            box-shadow: 0 0 10px #23d5ab;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(35, 213, 171, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(35, 213, 171, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(35, 213, 171, 0); }
         }
 
         .count-val {
@@ -123,6 +140,9 @@
         <h1>Privacy Display</h1>
         
         <div class="stats-container">
+            <div class="counter-box" style="border: 1px solid rgba(35, 213, 171, 0.4);">
+                <span class="online-dot"></span> Şuan Aktif: <span id="online-count" class="count-val">0</span>
+            </div>
             <div class="counter-box">
                 👀 Toplam Ziyaret: <span id="visit-count" class="count-val">...</span>
             </div>
@@ -140,7 +160,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, runTransaction, onValue, onDisconnect, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBWlImfnDVyYXaSeLUCVBGW0azEbsA_VCw",
@@ -158,11 +178,27 @@
         
         const visitorRef = ref(db, 'ziyaret_sayaci');
         const downloadRef = ref(db, 'indirme_sayaci');
+        const onlineStatusRef = ref(db, 'aktif_kisiler');
+        const connectedRef = ref(db, '.info/connected');
 
-        // 1. Ziyaret Sayacını Artır
+        // 1. Toplam Ziyaret Sayacını Artır
         runTransaction(visitorRef, (current) => (current || 0) + 1);
 
-        // 2. Sayıları Canlı İzle
+        // 2. Anlık Aktif Kişi Takibi
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                // Kullanıcı bağlandığında geçici bir ID oluştur ve listeye ekle
+                const myStatusRef = push(onlineStatusRef);
+                
+                // Sayfadan ayrıldığında bu ID'yi sil
+                onDisconnect(myStatusRef).remove();
+                
+                // Bağlantıyı aktif set et
+                set(myStatusRef, true);
+            }
+        });
+
+        // 3. Verileri Canlı İzle ve Ekrana Yaz
         onValue(visitorRef, (snapshot) => {
             document.getElementById('visit-count').innerText = (snapshot.val() || 0).toLocaleString();
         });
@@ -171,7 +207,13 @@
             document.getElementById('download-count').innerText = (snapshot.val() || 0).toLocaleString();
         });
 
-        // 3. Butona Basıldığında İndirme Sayacını Artır
+        // Aktif kişi listesinin uzunluğunu say
+        onValue(onlineStatusRef, (snapshot) => {
+            const count = snapshot.size || 0;
+            document.getElementById('online-count').innerText = count.toLocaleString();
+        });
+
+        // 4. İndirme Butonu Tıklama Takibi
         const btn = document.getElementById('downloadBtn');
         btn.addEventListener('click', () => {
             runTransaction(downloadRef, (current) => (current || 0) + 1);
