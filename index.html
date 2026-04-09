@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy_Display_base.apk İndir</title>
     <style>
-        /* Animasyonlu Renkli Arka Plan */
+        /* Mevcut harika stillerin korunuyor */
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -25,12 +25,11 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Cam Efekti (Glassmorphism) */
         .container {
             text-align: center;
             padding: 50px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px); /* Arka planı bulanıklaştırır */
+            backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -48,11 +47,21 @@
 
         p {
             color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-size: 0.9rem;
         }
 
-        /* Neon Efektli Buton */
+        /* Sayaç Kutusu Stili */
+        .counter-box {
+            color: #fff;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
         .download-btn {
             display: inline-block;
             padding: 18px 40px;
@@ -65,7 +74,6 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            position: relative;
         }
 
         .download-btn:hover {
@@ -75,11 +83,6 @@
             color: #fff;
         }
 
-        .download-btn:active {
-            transform: translateY(-2px);
-        }
-
-        /* Dekoratif Blur Yuvarlaklar */
         .blob {
             position: absolute;
             width: 300px;
@@ -103,12 +106,32 @@
 
     <div class="container">
         <h1>Privacy Display</h1>
+        
+        <div class="counter-box">
+            👀 Toplam Ziyaret: <span id="count">Yükleniyor...</span>
+        </div>
+
         <p>Dosyanız güvenle indirilmeye hazır.</p>
         
         <a href="https://github.com/mete283/apks/raw/main/Privacy_Display_base.apk" download="Privacy_Display_base.apk" class="download-btn">
-             ŞİMDİ İNDİR
+            ŞİMDİ İNDİR (Download)
         </a>
     </div>
+
+    <script>
+        function updateCounter() {
+            // "privacy-display-mete" kısmını kendine göre değiştirebilirsin, benzersiz bir isim olmalı
+            fetch('https://api.countapi.xyz/hit/mete-privacy-display/visits')
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('count').innerHTML = res.value;
+                })
+                .catch(err => {
+                    document.getElementById('count').innerHTML = "Bilinmiyor";
+                });
+        }
+        updateCounter();
+    </script>
 
 </body>
 </html>
