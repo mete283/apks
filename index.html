@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy_Display_base.apk İndir</title>
+    <title>Privacy Display İndir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Mevcut harika stillerin korunuyor */
+        /* Animasyonlu Renkli Arka Plan */
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -25,78 +26,90 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* Cam Efekti (Glassmorphism) Konteynırı */
         .container {
             text-align: center;
             padding: 50px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            max-width: 400px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 420px;
             width: 90%;
+            z-index: 10;
         }
 
         h1 {
             color: white;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-weight: 800;
+        }
+
+        /* Sayaç Kutusu */
+        .counter-box {
+            color: #fff;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.1);
+            letter-spacing: 0.5px;
+        }
+
+        #count {
+            font-weight: bold;
+            color: #23d5ab;
         }
 
         p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 35px;
+            font-size: 1rem;
         }
 
-        /* Sayaç Kutusu Stili */
-        .counter-box {
-            color: #fff;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
+        /* Havalı İndirme Butonu */
         .download-btn {
             display: inline-block;
-            padding: 18px 40px;
+            padding: 20px 45px;
             background: #fff;
-            color: #333;
+            color: #1a1a1a;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            letter-spacing: 1.5px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .download-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.6);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 255, 255, 0.5);
             background: #000;
             color: #fff;
         }
 
+        /* Arka Plan Dekoratif Blur Objeleri */
         .blob {
             position: absolute;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.1);
-            filter: blur(50px);
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            filter: blur(70px);
             border-radius: 50%;
-            z-index: -1;
-            animation: move 20s infinite alternate;
+            z-index: 1;
+            animation: move 25s infinite alternate ease-in-out;
         }
 
         @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(10%, 10%); }
+            from { transform: translate(-20%, -20%) rotate(0deg); }
+            to { transform: translate(20%, 20%) rotate(360deg); }
         }
     </style>
 </head>
@@ -108,29 +121,47 @@
         <h1>Privacy Display</h1>
         
         <div class="counter-box">
-            👀 Toplam Ziyaret: <span id="count">Yükleniyor...</span>
+            👀 Toplam Ziyaretçi: <span id="count">Yükleniyor...</span>
         </div>
 
-        <p>Dosyanız güvenle indirilmeye hazır.</p>
+        <p>Dosyanız indirilmeye hazır.</p>
         
         <a href="https://github.com/mete283/apks/raw/main/Privacy_Display_base.apk" download="Privacy_Display_base.apk" class="download-btn">
             ŞİMDİ İNDİR (Download)
         </a>
     </div>
 
-    <script>
-        function updateCounter() {
-            // "privacy-display-mete" kısmını kendine göre değiştirebilirsin, benzersiz bir isim olmalı
-            fetch('https://api.countapi.xyz/hit/mete-privacy-display/visits')
-                .then(res => res.json())
-                .then(res => {
-                    document.getElementById('count').innerHTML = res.value;
-                })
-                .catch(err => {
-                    document.getElementById('count').innerHTML = "Bilinmiyor";
-                });
-        }
-        updateCounter();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Senin verdiğin Firebase ayarları
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWlImfnDVyYXaSeLUCVBGW0azEbsA_VCw",
+            authDomain: "apks-78f87.firebaseapp.com",
+            databaseURL: "https://apks-78f87-default-rtdb.firebaseio.com",
+            projectId: "apks-78f87",
+            storageBucket: "apks-78f87.firebasestorage.app",
+            messagingSenderId: "611145794389",
+            appId: "1:611145794389:web:bf2775d65405d05e1065dc",
+            measurementId: "G-4FFX2VXG6K"
+        };
+
+        // Firebase Başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const visitorRef = ref(db, 'ziyaret_sayaci');
+
+        // 1. Sayacı 1 Artır (Her giriş/yenilemede)
+        runTransaction(visitorRef, (currentValue) => {
+            return (currentValue || 0) + 1;
+        });
+
+        // 2. Sayıyı Ekranda Canlı Göster
+        onValue(visitorRef, (snapshot) => {
+            const val = snapshot.val();
+            document.getElementById('count').innerText = val ? val.toLocaleString() : 0;
+        });
     </script>
 
 </body>
